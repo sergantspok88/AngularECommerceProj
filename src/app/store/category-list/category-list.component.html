@@ -1,0 +1,9 @@
+<ul class="categories">
+  <li *ngFor="let category of categories">
+    <!-- <a routerLink="/detail/{{hero.id}}"> -->
+      <span class="badge">{{category.name}}</span> - {{category.description}}
+    <!-- </a> -->
+    <!-- <button class="delete" title="delete hero"
+      (click)="delete(hero)">x</button> -->
+  </li>
+</ul>
