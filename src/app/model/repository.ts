@@ -11,20 +11,20 @@ export class Repository{
   private categories: Category[] = [];
 
   constructor(private dataSource: DataSource){
-    dataSource.getProducts().subscribe(
-      data => {
-        this.products = data;
-      }
-    )
+    // dataSource.getProducts().subscribe(
+    //   data => {
+    //     this.products = data;
+    //   }
+    // )
 
-    dataSource.getCategories().subscribe(
-      data => {
-        this.categories = data;
-      }
-    )
+    // dataSource.getCategories().subscribe(
+    //   data => {
+    //     this.categories = data;
+    //   }
+    // )
   }
 
-  
+
 
   getProducts():Product[]{
     return this.products;

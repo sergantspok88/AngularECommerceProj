@@ -7,6 +7,7 @@ import { Repository } from './model/repository';
 import { ProductList } from './store/product-list/productList.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CategoryListComponent } from './store/category-list/category-list.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { CategoryListComponent } from './store/category-list/category-list.compo
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [DataSource, Repository],
   bootstrap: [AppComponent]

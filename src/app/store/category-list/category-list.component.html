@@ -1,9 +1,26 @@
-<ul class="categories">
-  <li *ngFor="let category of categories">
-    <!-- <a routerLink="/detail/{{hero.id}}"> -->
-      <span class="badge">{{category.name}}</span> - {{category.description}}
-    <!-- </a> -->
-    <!-- <button class="delete" title="delete hero"
-      (click)="delete(hero)">x</button> -->
-  </li>
-</ul>
+<div class="container">
+  <h4><label for="search-box">Categories</label></h4>
+  <ul class="categories list-group">
+    <li
+      class="list-group-item list-group-item-action"
+      [class.active]="categoryActive(category.name)"
+      *ngFor="let category of categories"
+      (click)="setCategory(category.name)"
+    >
+      <!-- <a routerLink="/detail/{{hero.id}}"> -->
+      <span class="badge">{{
+        category.name
+      }}</span>
+      - {{ category.description }}
+      <!-- </a> -->
+    </li>
+  </ul>
+</div>
+<br>
+<div class="container">
+  <div class="col-md-12 text-center">
+    <button type="button" class="btn btn-primary" (click)="resetCategory()">
+      Reset category
+    </button>
+  </div>
+</div>
