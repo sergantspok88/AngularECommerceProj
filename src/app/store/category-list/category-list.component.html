@@ -17,7 +17,7 @@
   </ul>
 </div>
 <br>
-<div class="container">
+<div [hidden]="categoryActive('')" class="container">
   <div class="col-md-12 text-center">
     <button type="button" class="btn btn-primary" (click)="resetCategory()">
       Reset category

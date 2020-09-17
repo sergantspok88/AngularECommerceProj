@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Repository } from '../../model/repository';
+import { Repository } from '../../services/repository';
 import { Product } from '../../model/product.model';
-import { DataSource } from 'src/app/model/datasource';
+import { DataSource } from 'src/app/services/datasource';
 import { Observable, Subject } from 'rxjs';
 
 import{ debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import{ debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
   selector: 'productList',
   templateUrl: 'productList.component.html',
 })
+
 export class ProductList implements OnInit {
   searchProducts$: Observable<Product[]>;
   private searchTerms = new Subject<string>();

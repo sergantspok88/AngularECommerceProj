@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, VirtualTimeScheduler } from 'rxjs';
-import { Product } from './product.model';
-import { Category } from './category.model';
+import { Product } from '../model/product.model';
+import { Category } from '../model/category.model';
+import { environment } from 'src/environments/environment';
 
-const PROTOCOL = 'https';
-const PORT = 5001;
+//const PROTOCOL = 'https';
+//const PORT = 5001;
 
 @Injectable()
 export class DataSource {
-  baseUrl: string;
+  //baseUrl: string;
 
   public products: Product[] = [];
   public categories: Category[] = [];
@@ -18,7 +19,7 @@ export class DataSource {
   private takeNumber: number = 10;
 
   constructor(private http: HttpClient) {
-    this.baseUrl = `${PROTOCOL}://${location.hostname}:${PORT}/`;
+    //this.baseUrl = `${PROTOCOL}://${location.hostname}:${PORT}/`;
 
     //console.log('products.length: ' + this.products.length);
     this.loadMoreProducts();
@@ -78,7 +79,7 @@ export class DataSource {
     let take = 5;
     if(nameLike){
       return this.http.get<Product[]>(
-        this.baseUrl + `api/products-like/${nameLike}/${take}`
+        environment.apiUrl + `api/products-like/${nameLike}/${take}`
       );
     } else {
       return of([]);
@@ -93,7 +94,7 @@ export class DataSource {
     take: number
   ): Observable<Product[]> {
     return this.http.get<Product[]>(
-      this.baseUrl + `api/products/${categoryName}/${skip}/${take}`
+      environment.apiUrl + `api/products/${categoryName}/${skip}/${take}`
     );
   }
 
@@ -102,16 +103,16 @@ export class DataSource {
     take: number
   ): Observable<Product[]> {
     return this.http.get<Product[]>(
-      this.baseUrl + `api/products/${skip}/${take}`
+      environment.apiUrl + `api/products/${skip}/${take}`
     );
   }
 
   private getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.baseUrl + 'api/products');
+    return this.http.get<Product[]>(environment.apiUrl + 'api/products');
     //return this.http.get<Product[]>(this.baseUrl + 'api/products/20/10');
   }
 
   private getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(this.baseUrl + 'api/categories');
+    return this.http.get<Category[]>(environment.apiUrl + 'api/categories');
   }
 }

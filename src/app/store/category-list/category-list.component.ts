@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Repository } from 'src/app/model/repository';
+import { Repository } from 'src/app/services/repository';
 import { Category } from 'src/app/model/category.model';
-import { DataSource } from 'src/app/model/datasource';
+import { DataSource } from 'src/app/services/datasource';
 
 @Component({
   selector: 'categoryList',

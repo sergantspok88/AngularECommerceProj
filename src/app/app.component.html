@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container">
   <div class="navbar navbar-dark navbar-expand bg-dark">
     <a class="navbar-brand" href="#">E-commerce</a>
   </div>
@@ -6,4 +6,22 @@
     <categoryList></categoryList>
     <productList></productList>
   </div>
+  <router-outlet></router-outlet>
+</div> -->
+
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+  <a class="navbar-brand" routerLink="/">E-commerce</a>
+  <div class="collapse navbar-collapse">
+    <div class="mr-auto">
+      <!-- Pushes everything to right by taking all free place -->
+    </div>
+    <p class="text-white mr-1">{{accountService.userValue.username}}</p>
+    <button class="btn btn-primary mr-1" [routerLink]="['/signin']">Sign in</button>
+    <button class="btn btn-primary" (onClick)="accountService.logout()">Sign out</button>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <alert></alert>
+  <router-outlet></router-outlet>
 </div>

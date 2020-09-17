@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Product } from './product.model';
+import { Product } from '../model/product.model';
 import { DataSource } from './datasource';
-import { Category } from './category.model';
+import { Category } from '../model/category.model';
 
 
 @Injectable()
