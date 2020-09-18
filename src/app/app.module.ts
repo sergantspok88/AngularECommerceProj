@@ -14,6 +14,7 @@ import { SignInComponent } from './store/sign-in/sign-in.component';
 import { RegisterComponent } from './store/register/register.component';
 import { AlertComponent } from './alert/alert.component';
 import { JwtInterceptor } from './helpers/jwt.interceptor';
+import { ErrorInterceptor } from './helpers/error.interceptor';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
     DataSource,
     Repository,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })

@@ -15,9 +15,29 @@
     <div class="mr-auto">
       <!-- Pushes everything to right by taking all free place -->
     </div>
-    <p class="text-white mr-1">{{accountService.userValue.username}}</p>
-    <button class="btn btn-primary mr-1" [routerLink]="['/signin']">Sign in</button>
-    <button class="btn btn-primary" (onClick)="accountService.logout()">Sign out</button>
+    <p *ngIf="accountService.userValue" class="text-white mr-1">
+      {{ accountService.userValue.username }}: role {{accountService.userValue.role}}
+    </p>
+    <button
+      *ngIf="!accountService.userValue"
+      class="btn btn-primary mr-1"
+      [routerLink]="['/signin']"
+    >
+      Sign in
+    </button>
+    <button
+      *ngIf="accountService.userValue"
+      class="btn btn-primary mr-1"
+      (click)="accountService.logout()"
+    >
+      Sign out
+    </button>
+    <button class="btn btn-primary mr-1" (click)="cartButtonClicked()">
+      <i class="fa fa-shopping-cart"></i> Cart
+    </button>
+    <button class="btn btn-primary mr-1" (click)="wishlistButtonClicked()">
+      <i class="fa fa-heart"></i> Wishlist
+    </button>
   </div>
 </nav>
 

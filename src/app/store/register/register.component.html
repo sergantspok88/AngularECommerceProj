@@ -1,48 +1,79 @@
 <div class="login-form">
-  <form action="/examples/actions/confirmation.php" method="post">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <h2 class="text-center">Register</h2>
     <div class="form-group">
       <input
         type="text"
         class="form-control"
         placeholder="First Name"
-        required="required"
+        formControlName="firstname"
+        [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }"
       />
+      <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
+        <div *ngIf="f.firstname.errors.required">First Name is required</div>
+      </div>
     </div>
     <div class="form-group">
       <input
         type="text"
         class="form-control"
         placeholder="Last Name"
-        required="required"
+        formControlName="lastname"
+        [ngClass]="{ 'is-invalid': submitted && f.lastname.errors }"
       />
+      <div *ngIf="submitted && f.lastname.errors" class="invalid-feedback">
+        <div *ngIf="f.lastname.errors.required">Last Name is required</div>
+      </div>
     </div>
     <div class="form-group">
       <input
         type="text"
         class="form-control"
         placeholder="Username"
-        required="required"
+        formControlName="username"
+        [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
       />
+      <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+        <div *ngIf="f.username.errors.required">Username is required</div>
+      </div>
     </div>
     <div class="form-group">
       <input
         type="password"
         class="form-control"
         placeholder="Password"
-        required="required"
+        formControlName="password"
+        [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
       />
+      <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+        <div *ngIf="f.password.errors.required">Password is required</div>
+        <div *ngIf="f.password.errors.minlength">
+          Password must be at least 2 characters long
+        </div>
+      </div>
     </div>
     <div class="form-group">
       <input
         type="password"
         class="form-control"
         placeholder="Confirm Password"
-        required="required"
+        formControlName="confirmpassword"
+        [ngClass]="{ 'is-invalid': f.confirmpassword.touched && f.confirmpassword.errors }"
       />
+      <div
+        *ngIf="f.confirmpassword.touched && f.confirmpassword.errors"
+        class="invalid-feedback"
+      >
+        <div *ngIf="f.confirmpassword.errors.required">
+          Password is required.
+        </div>
+        <div *ngIf="f.confirmpassword.errors.confirmedValidator">
+          Password and Confirm Password must be a match.
+        </div>
+      </div>
     </div>
     <div class="form-group">
-      <button type="submit" class="btn btn-primary btn-block">Log in</button>
+      <button type="submit" class="btn btn-primary btn-block">Register</button>
     </div>
     <div class="clearfix">
       <label class="float-left form-check-label"

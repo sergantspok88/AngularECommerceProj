@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable} from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from '../model/user';
@@ -29,6 +29,9 @@ export class AccountService {
     return this.userSubject.value;
   }
 
+  //!!!
+  //public userName: string = 'Non authorized';
+
   login(username, password) {
     return this.http
       .post<User>(environment.apiUrl + '/api/users/authenticate', {
@@ -41,15 +44,22 @@ export class AccountService {
           //and to keep user logged in between page refreshes
           localStorage.setItem('user', JSON.stringify(user));
           this.userSubject.next(user);
+
+          //!!!!
+          //this.userName = user.username;
+
           return user;
         })
       );
   }
 
   logout() {
+    console.log('logout');
     //remove user from local storage and set currentuser to null
     localStorage.removeItem('user');
     this.userSubject.next(null);
+    //!!!
+    //this.userName = 'Non authorized';
     //this.router.navigate(['/account/login']);
   }
 

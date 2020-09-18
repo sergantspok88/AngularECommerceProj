@@ -79,7 +79,7 @@ export class DataSource {
     let take = 5;
     if(nameLike){
       return this.http.get<Product[]>(
-        environment.apiUrl + `api/products-like/${nameLike}/${take}`
+        environment.apiUrl + `/api/products-like/${nameLike}/${take}`
       );
     } else {
       return of([]);
@@ -94,7 +94,7 @@ export class DataSource {
     take: number
   ): Observable<Product[]> {
     return this.http.get<Product[]>(
-      environment.apiUrl + `api/products/${categoryName}/${skip}/${take}`
+      environment.apiUrl + `/api/products/${categoryName}/${skip}/${take}`
     );
   }
 
@@ -103,16 +103,16 @@ export class DataSource {
     take: number
   ): Observable<Product[]> {
     return this.http.get<Product[]>(
-      environment.apiUrl + `api/products/${skip}/${take}`
+      environment.apiUrl + `/api/products/${skip}/${take}`
     );
   }
 
   private getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(environment.apiUrl + 'api/products');
+    return this.http.get<Product[]>(environment.apiUrl + '/api/products');
     //return this.http.get<Product[]>(this.baseUrl + 'api/products/20/10');
   }
 
   private getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(environment.apiUrl + 'api/categories');
+    return this.http.get<Category[]>(environment.apiUrl + '/api/categories');
   }
 }

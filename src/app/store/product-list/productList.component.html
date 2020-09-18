@@ -41,16 +41,22 @@
   >
     <div class="card">
       <div class="card-body">
+        <button class="btn btn-primary float-right">
+          <i class="fa fa-heart"></i>
+        </button>
         <h5 class="card-title">{{ product.name }}</h5>
-        - {{ product.description }} <br />
+        <p class="card-text">- {{ product.description }} <br />
         - {{ product.price }} USD <br />
-        - Category: {{ product.categoryName }}
+        - Category: {{ product.categoryName }}</p>
+        <button class="btn btn-primary btn-block mr-1">
+          <i class="fa fa-shopping-cart"></i> Buy
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<br>
+<br />
 
 <div class="container">
   <div class="col-md-12 text-center">
@@ -60,4 +66,4 @@
   </div>
 </div>
 
-<br>
+<br />
