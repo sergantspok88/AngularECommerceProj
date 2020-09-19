@@ -1,0 +1,19 @@
+<div class="row">
+  <div *ngFor="let wishlist of wishlists; index as ind" class="col-12 mt-4">
+    <div class="card">
+      <div class="card-body">
+        <button class="btn btn-primary float-right" (click)="deleteWishlist(wishlist.id)">
+          <i class="fa fa-times"></i>
+        </button>
+        <h5 class="card-title">{{ wishlist.product.name }}</h5>
+        <p class="card-text">
+          - {{ wishlist.product.description }} <br />
+          - {{ wishlist.product.price }} USD <br />
+          - Category: {{ wishlist.product.categoryName }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="wishlists.length == 0"><p class="text-center font-weight-light lead mt-4">Nothing in wishlist. Go wishlist something :)</p></div>

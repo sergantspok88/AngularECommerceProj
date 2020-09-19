@@ -4,6 +4,10 @@ import { Observable, of, VirtualTimeScheduler } from 'rxjs';
 import { Product } from '../model/product.model';
 import { Category } from '../model/category.model';
 import { environment } from 'src/environments/environment';
+import { Wishlist } from '../model/wishlist.model';
+import { AccountService } from './account.service';
+import { WishlistComponent } from '../store/wishlist/wishlist.component';
+import { map } from 'rxjs/operators';
 
 //const PROTOCOL = 'https';
 //const PORT = 5001;
@@ -14,20 +18,80 @@ export class DataSource {
 
   public products: Product[] = [];
   public categories: Category[] = [];
+  public wishlists: Wishlist[] = [];
 
   private chosenCategoryName: string = '';
   private takeNumber: number = 10;
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private accountService: AccountService
+  ) {
     //this.baseUrl = `${PROTOCOL}://${location.hostname}:${PORT}/`;
 
     //console.log('products.length: ' + this.products.length);
     this.loadMoreProducts();
     this.loadCategories();
+    this.loadWishlists();
+
+    this.accountService.user.subscribe((data) => {
+      if (data) {
+        this.loadWishlists();
+      } else {
+        //clear wishlist if logge out
+        this.wishlists.length = 0;
+      }
+    });
   }
 
   public loadCategories() {
     this.getCategories().subscribe((data) => (this.categories = data));
+  }
+
+  public loadWishlists() {
+    if (this.accountService.userValue) {
+      this.getWishlistsForUser(this.accountService.userValue.id).subscribe(
+        (data) => (this.wishlists = data)
+      );
+    }
+  }
+
+  private getWishlistsForUser(userId): Observable<Wishlist[]> {
+    return this.http.get<Wishlist[]>(
+      environment.apiUrl + `/api/wishlistitems/user/${userId}`
+    );
+  }
+
+  public deleteWishlist(wishlistId) {
+    if (this.accountService.userValue) {
+      this.http
+        .delete(environment.apiUrl + `/api/wishlistitems/${wishlistId}`, {
+          responseType: 'text',
+        })
+        .subscribe((data) => {
+          //console.log(JSON.stringify(data));
+        });
+      //console.log('Delete wishlistItemId: ' + wishlistId);
+      this.wishlists.splice(
+        this.wishlists.findIndex((w) => w.id == wishlistId),
+        1
+      );
+    }
+  }
+
+  public addToWishlist(productId) {
+    if (this.accountService.userValue) {
+      //check first if it is not already in wishlist
+      let indexOfWishlist = this.wishlists.findIndex(
+        (w) => w.product.id == productId
+      );
+      this.http
+        .post<Wishlist>(environment.apiUrl + `/api/wishlistitems`, { productId })
+        .subscribe((data) => {
+          //can do smth here
+          this.wishlists.push(data);
+        });
+    }
   }
 
   public setTakeNumber(take: number) {
@@ -77,14 +141,13 @@ export class DataSource {
 
   public searchProducts(nameLike: string): Observable<Product[]> {
     let take = 5;
-    if(nameLike){
+    if (nameLike) {
       return this.http.get<Product[]>(
         environment.apiUrl + `/api/products-like/${nameLike}/${take}`
       );
     } else {
       return of([]);
     }
-
   }
 
   //These methods are only used internally

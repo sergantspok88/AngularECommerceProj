@@ -23,10 +23,10 @@ export class AppComponent {
   }
 
   wishlistButtonClicked() {
-    if (this.accountService.userValue) {
-      alert('Wishlist not implemented');
-    } else {
+    if (!this.accountService.userValue) {
       this.router.navigate(['../signin'], { relativeTo: this.route });
+    } else {
+      this.router.navigate(['../wishlist'], { relativeTo: this.route });
     }
   }
 }

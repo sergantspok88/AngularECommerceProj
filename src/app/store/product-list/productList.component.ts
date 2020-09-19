@@ -5,29 +5,38 @@ import { DataSource } from 'src/app/services/datasource';
 import { Observable, Subject } from 'rxjs';
 
 import{ debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'productList',
   templateUrl: 'productList.component.html',
 })
-
 export class ProductList implements OnInit {
   searchProducts$: Observable<Product[]>;
   private searchTerms = new Subject<string>();
-  searchText:string = '';
+  searchText: string = '';
 
   constructor(
     //private repository: Repository
-    private datasource: DataSource
+    private datasource: DataSource,
+    private accountService: AccountService
   ) {}
+
+  isSigned(): boolean {
+    if (this.accountService.userValue) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   //Push a search term into the observable stream
   search(term: string): void {
     this.searchTerms.next(term);
   }
 
-  clearSearchField():void{
-    this.searchText = "";
+  clearSearchField(): void {
+    this.searchText = '';
     this.search(this.searchText);
   }
 
@@ -44,7 +53,7 @@ export class ProductList implements OnInit {
     );
   }
 
-  searchItemClicked(productName:string){
+  searchItemClicked(productName: string) {
     alert(`Not Implemented. Clicked search product: ${productName}`);
   }
 
@@ -55,6 +64,26 @@ export class ProductList implements OnInit {
 
   loadMoreProducts() {
     this.datasource.loadMoreProducts();
+  }
+
+  wishlistClick(productId) {
+    //alert('Not implemented');
+    if (this.datasource.wishlists.some((w) => w.product.id == productId)) {
+      //delete wishlist
+      let indexOfWishlist = this.datasource.wishlists.findIndex(w => w.product.id == productId);
+      this.datasource.deleteWishlist(this.datasource.wishlists[indexOfWishlist].id);
+    } else {
+      //add to wishlist
+      this.datasource.addToWishlist(productId);
+    }
+  }
+
+  isProductInWishlist(productId): boolean {
+    return this.datasource.wishlists.some((w) => w.product.id == productId);
+  }
+
+  buyProductClick() {
+    alert('Not implemented');
   }
 
   // search(searchValue){

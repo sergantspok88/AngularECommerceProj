@@ -41,14 +41,29 @@
   >
     <div class="card">
       <div class="card-body">
-        <button class="btn btn-primary float-right">
+        <!--  -->
+        <button
+          class="btn float-right"
+          [disabled]="!isSigned()"
+          [ngClass]="{
+            'btn-primary': isSigned() && isProductInWishlist(product.id),
+            'btn-outline-primary': isSigned() && !isProductInWishlist(product.id),
+            'btn-outline-secondary': !isSigned()
+          }"
+          (click)="wishlistClick(product.id)"
+        >
           <i class="fa fa-heart"></i>
         </button>
         <h5 class="card-title">{{ product.name }}</h5>
-        <p class="card-text">- {{ product.description }} <br />
-        - {{ product.price }} USD <br />
-        - Category: {{ product.categoryName }}</p>
-        <button class="btn btn-primary btn-block mr-1">
+        <p class="card-text">
+          - {{ product.description }} <br />
+          - {{ product.price }} USD <br />
+          - Category: {{ product.categoryName }}
+        </p>
+        <button
+          class="btn btn-primary btn-block mr-1"
+          (click)="buyProductClick()"
+        >
           <i class="fa fa-shopping-cart"></i> Buy
         </button>
       </div>
