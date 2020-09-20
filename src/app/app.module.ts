@@ -16,6 +16,7 @@ import { AlertComponent } from './alert/alert.component';
 import { JwtInterceptor } from './helpers/jwt.interceptor';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 import { WishlistComponent } from './store/wishlist/wishlist.component';
+import { CartComponent } from './store/cart/cart.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { WishlistComponent } from './store/wishlist/wishlist.component';
     RegisterComponent,
     AlertComponent,
     WishlistComponent,
+    CartComponent,
   ],
   imports: [
     BrowserModule,

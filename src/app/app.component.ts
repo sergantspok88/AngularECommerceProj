@@ -15,11 +15,12 @@ export class AppComponent {
     private route: ActivatedRoute) {}
 
   cartButtonClicked() {
-    if(this.accountService.userValue){
-      alert("Cart not implemented");
-    } else {
-      this.router.navigate(['../signin'], { relativeTo: this.route });
-    }
+    this.router.navigate(['../cart'], { relativeTo: this.route });
+    // if(this.accountService.userValue){
+    //   alert("Cart not implemented");
+    // } else {
+    //   this.router.navigate(['../signin'], { relativeTo: this.route });
+    // }
   }
 
   wishlistButtonClicked() {

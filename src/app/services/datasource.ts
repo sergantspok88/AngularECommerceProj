@@ -8,6 +8,9 @@ import { Wishlist } from '../model/wishlist.model';
 import { AccountService } from './account.service';
 import { WishlistComponent } from '../store/wishlist/wishlist.component';
 import { map } from 'rxjs/operators';
+import { AlertService } from './alert.service';
+import { JsonPipe } from '@angular/common';
+import { CartItem } from '../model/cart.model';
 
 //const PROTOCOL = 'https';
 //const PORT = 5001;
@@ -19,13 +22,15 @@ export class DataSource {
   public products: Product[] = [];
   public categories: Category[] = [];
   public wishlists: Wishlist[] = [];
+  public cartItems: CartItem[] = [];
 
   private chosenCategoryName: string = '';
   private takeNumber: number = 10;
 
   constructor(
     private http: HttpClient,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private alertService: AlertService
   ) {
     //this.baseUrl = `${PROTOCOL}://${location.hostname}:${PORT}/`;
 
@@ -34,11 +39,13 @@ export class DataSource {
     this.loadCategories();
     this.loadWishlists();
 
+    this.loadCartItems();
+
     this.accountService.user.subscribe((data) => {
       if (data) {
         this.loadWishlists();
       } else {
-        //clear wishlist if logge out
+        //clear wishlist if logged out
         this.wishlists.length = 0;
       }
     });
@@ -46,6 +53,71 @@ export class DataSource {
 
   public loadCategories() {
     this.getCategories().subscribe((data) => (this.categories = data));
+  }
+
+  private loadCartItems() {
+    if (this.accountService.userValue) {
+      this.getCartItemsForUser(this.accountService.userValue.id).subscribe(
+        (data) => (this.cartItems = data)
+      );
+    }
+  }
+
+  private getCartItemsForUser(userId): Observable<CartItem[]> {
+    return this.http.get<CartItem[]>(
+      environment.apiUrl + `/api/cartitems/user/${userId}`
+    );
+  }
+
+  public putProductInCart(productId) {
+    let alreadyInCart = this.cartItems.some((c) => c.product.id == productId);
+
+    if (!alreadyInCart) {
+      let product = this.products[
+        this.products.findIndex((p) => p.id == productId)
+      ];
+      let cartItem = new CartItem(
+        (this.cartItems.length + 1).toString(),
+        product,
+        (0).toString(),
+        1
+      );
+      this.cartItems.push(cartItem);
+
+      if (this.accountService.userValue) {
+
+        cartItem.userId = this.accountService.userValue.id;
+
+        this.http
+          .post<CartItem>(environment.apiUrl + '/api/cartitems', { ProductId: cartItem.product.id, UserId: cartItem.userId, Quantity: cartItem.quantity})
+          .subscribe(
+            (data) => {
+              cartItem.id = data.id;
+            },
+            (error) => {
+              this.alertService.error(error);
+            }
+          );
+      }
+    }
+  }
+
+  public deleteCartItem(cartItemId) {
+    this.cartItems.splice(
+      this.cartItems.findIndex((c) => c.id == cartItemId),
+      1
+    );
+
+    if (this.accountService.userValue) {
+      this.http
+        .delete(environment.apiUrl + `/api/cartitems/${cartItemId}`, {
+          responseType: 'text',
+        })
+        .subscribe((data) => {
+          //console.log(JSON.stringify(data));
+        });
+      //console.log('Delete cartItemId: ' + cartItemId);
+    }
   }
 
   public loadWishlists() {
@@ -86,7 +158,9 @@ export class DataSource {
         (w) => w.product.id == productId
       );
       this.http
-        .post<Wishlist>(environment.apiUrl + `/api/wishlistitems`, { productId })
+        .post<Wishlist>(environment.apiUrl + `/api/wishlistitems`, {
+          productId,
+        })
         .subscribe((data) => {
           //can do smth here
           this.wishlists.push(data);
@@ -147,6 +221,32 @@ export class DataSource {
       );
     } else {
       return of([]);
+    }
+  }
+
+  public deleteProduct(productId) {
+    if (
+      this.accountService.userValue &&
+      this.accountService.userValue.role == 'Admin'
+    ) {
+      this.http
+        .delete(environment.apiUrl + `/api/products/${productId}`, {
+          responseType: 'json',
+        })
+        .subscribe(
+          (data) => {
+            //console.log(JSON.stringify(data));
+            this.products.splice(
+              this.products.findIndex((p) => p.id == productId),
+              1
+            );
+          },
+          (error) => {
+            //this.alertService.error(error);
+            this.alertService.error(error);
+          }
+        );
+      //console.log('Delete productId: ' + productId);
     }
   }
 

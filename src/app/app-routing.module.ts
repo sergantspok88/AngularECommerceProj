@@ -8,12 +8,14 @@ import { StoreFrontComponent } from './store/store-front/store-front.component';
 import { SignInComponent } from './store/sign-in/sign-in.component';
 import { RegisterComponent } from './store/register/register.component';
 import { WishlistComponent } from './store/wishlist/wishlist.component';
+import { CartComponent } from './store/cart/cart.component';
 
 const routes: Routes = [
   { path: '', component: StoreFrontComponent },
   { path: 'signin', component: SignInComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'wishlist', component: WishlistComponent },
+  { path: 'cart', component: CartComponent },
   //{ path: '', component: ProductList }
   //{ path: 'products', component: ProductList },
   //{ path: 'categories', component: CategoryListComponent },

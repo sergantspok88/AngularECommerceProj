@@ -1,0 +1,19 @@
+<div class="row">
+  <div *ngFor="let cartItem of carts; index as ind" class="col-12 mt-4">
+    <div class="card">
+      <div class="card-body">
+        <button class="btn btn-outline-primary float-right" (click)="deleteCart(cartItem.id)">
+          <i class="fa fa-times"></i>
+        </button>
+        <h5 class="card-title">{{ cartItem.product.name }}</h5>
+        <p class="card-text">
+          - {{ cartItem.product.description }} <br />
+          - {{ cartItem.product.price }} USD <br />
+          - Category: {{ cartItem.product.categoryName }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="carts.length == 0"><p class="text-center font-weight-light lead mt-4">Nothing in cart. Go buy something :)</p></div>

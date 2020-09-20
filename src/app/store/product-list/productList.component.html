@@ -39,46 +39,69 @@
     *ngFor="let product of products; index as ind"
     class="col-sm-12 col-md-6 col-xl-4 mt-4"
   >
-    <div class="card">
-      <div class="card-body">
+    <div class="card" (click)="productCardClicked(product.id, $event)">
+      <div class="card-body" (click)="productCardClicked(product.id, $event)">
         <!--  -->
-        <button
-          class="btn float-right"
-          [disabled]="!isSigned()"
-          [ngClass]="{
-            'btn-primary': isSigned() && isProductInWishlist(product.id),
-            'btn-outline-primary': isSigned() && !isProductInWishlist(product.id),
-            'btn-outline-secondary': !isSigned()
-          }"
-          (click)="wishlistClick(product.id)"
-        >
-          <i class="fa fa-heart"></i>
-        </button>
-        <h5 class="card-title">{{ product.name }}</h5>
-        <p class="card-text">
-          - {{ product.description }} <br />
-          - {{ product.price }} USD <br />
-          - Category: {{ product.categoryName }}
-        </p>
-        <button
-          class="btn btn-primary btn-block mr-1"
-          (click)="buyProductClick()"
-        >
-          <i class="fa fa-shopping-cart"></i> Buy
-        </button>
+
+        <div class="container mt-2" (click)="productCardClicked(product.id, $event)">
+          <div class="float-right">
+            <div>
+              <button
+                *ngIf="isAdmin()"
+                class="btn btn-outline-primary"
+                (click)="productDeleteClick(product.id)"
+              >
+                <i class="fa fa-times fa-fw"></i>
+              </button>
+            </div>
+            <div class="mt-1">
+              <button
+                class="btn"
+                [disabled]="!isSigned()"
+                [ngClass]="{
+                  'btn-primary': isSigned() && isProductInWishlist(product.id),
+                  'btn-outline-primary':
+                    isSigned() && !isProductInWishlist(product.id),
+                  'btn-outline-secondary': !isSigned()
+                }"
+                (click)="wishlistClick(product.id)"
+              >
+                <i class="fa fa-heart fa-fw"></i>
+              </button>
+            </div>
+          </div>
+
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p class="card-text">
+            - {{ product.description }} <br />
+            - {{ product.price }} USD <br />
+            - Category: {{ product.categoryName }}
+          </p>
+          <button
+            [disabled]="isProductInCart(product.id)"
+            class="btn btn-primary btn-block mr-1"
+            (click)="buyProductClick(product.id)"
+          >
+            <i class="fa fa-shopping-cart"></i> Buy
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<br />
+  <br />
 
-<div class="container">
-  <div class="col-md-12 text-center">
-    <button type="button" class="btn btn-primary" (click)="loadMoreProducts()">
-      Load more products
-    </button>
+  <div class="container">
+    <div class="col-md-12 text-center">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="loadMoreProducts()"
+      >
+        Load more products
+      </button>
+    </div>
   </div>
-</div>
 
-<br />
+  <br />
+</div>

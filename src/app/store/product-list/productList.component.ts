@@ -30,6 +30,14 @@ export class ProductList implements OnInit {
     }
   }
 
+  isAdmin(): boolean {
+    if (this.accountService.userValue) {
+      return this.accountService.userValue.role == 'Admin';
+    } else {
+      return false;
+    }
+  }
+
   //Push a search term into the observable stream
   search(term: string): void {
     this.searchTerms.next(term);
@@ -70,20 +78,39 @@ export class ProductList implements OnInit {
     //alert('Not implemented');
     if (this.datasource.wishlists.some((w) => w.product.id == productId)) {
       //delete wishlist
-      let indexOfWishlist = this.datasource.wishlists.findIndex(w => w.product.id == productId);
-      this.datasource.deleteWishlist(this.datasource.wishlists[indexOfWishlist].id);
+      let indexOfWishlist = this.datasource.wishlists.findIndex(
+        (w) => w.product.id == productId
+      );
+      this.datasource.deleteWishlist(
+        this.datasource.wishlists[indexOfWishlist].id
+      );
     } else {
       //add to wishlist
       this.datasource.addToWishlist(productId);
     }
   }
 
+  productDeleteClick(productId) {
+    //alert("Delete productId: " + productId + " not implemented");
+    this.datasource.deleteProduct(productId);
+  }
+
   isProductInWishlist(productId): boolean {
     return this.datasource.wishlists.some((w) => w.product.id == productId);
   }
 
-  buyProductClick() {
-    alert('Not implemented');
+  isProductInCart(productId): boolean {
+    return this.datasource.cartItems.some((c) => c.product.id == productId);
+  }
+
+  buyProductClick(productId) {
+    //alert('Not implemented');
+    this.datasource.putProductInCart(productId);
+  }
+
+  productCardClicked(productId, event){
+    if (event.target !== event.currentTarget) return;
+    alert("Product id: " + productId + " - Product page not implemented");
   }
 
   // search(searchValue){
