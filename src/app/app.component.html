@@ -33,7 +33,7 @@
       Sign out
     </button>
     <button class="btn btn-primary mr-1" (click)="cartButtonClicked()">
-      <i class="fa fa-shopping-cart"></i> Cart
+      <i class="fa fa-shopping-cart"></i> Cart <span *ngIf="cartItemsCount() > 0">:{{cartItemsCount()}}</span>
     </button>
     <button class="btn btn-primary mr-1" (click)="wishlistButtonClicked()">
       <i class="fa fa-heart"></i> Wishlist

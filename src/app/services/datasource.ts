@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of, VirtualTimeScheduler } from 'rxjs';
+import { forkJoin, Observable, of, VirtualTimeScheduler } from 'rxjs';
 import { Product } from '../model/product.model';
 import { Category } from '../model/category.model';
 import { environment } from 'src/environments/environment';
 import { Wishlist } from '../model/wishlist.model';
 import { AccountService } from './account.service';
 import { WishlistComponent } from '../store/wishlist/wishlist.component';
-import { map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { AlertService } from './alert.service';
 import { JsonPipe } from '@angular/common';
 import { CartItem } from '../model/cart.model';
@@ -41,12 +41,64 @@ export class DataSource {
 
     this.loadCartItems();
 
+    //do smth with wishlists on user login/logout
     this.accountService.user.subscribe((data) => {
       if (data) {
         this.loadWishlists();
       } else {
         //clear wishlist if logged out
         this.wishlists.length = 0;
+      }
+    });
+
+    //do smth with cartItems on user login/logout
+    this.accountService.user.subscribe((data) => {
+      if (data) {
+        //loggin in
+        //-if already has smth in the cart
+        //-- try to add all of this to server
+        //--- but be careful with correct ids(check implementation) - maybe add based on productId and not cartItemId
+        //---- actually webapi already uses productId
+        //--- smth already can be on server etc
+        //clean cart items
+        //--load from server
+
+        if (this.cartItems.length > 0) {
+          //Better to add all range at once (write appropriate methon in webapi)
+          //- but we`ll add them separately to test forkJoin ... for learning experience
+          let addRequests: Observable<CartItem>[] = [];
+          for (let cartItem of this.cartItems) {
+            addRequests.push(
+              this.http
+                .post<CartItem>(environment.apiUrl + `/api/cartitems`, {
+                  ProductId: cartItem.product.id,
+                  //UserId: cartItem.userId,
+                  Quantity: cartItem.quantity,
+                })
+                //.pipe(tap((res) => console.log(res)))
+                .pipe(catchError((error) => of(error)))
+            );
+          }
+          forkJoin(addRequests).subscribe(
+            (allResults) => {
+              console.log(allResults);
+
+              //clear cartItems
+              this.cartItems.length = 0;
+
+              this.loadCartItems();
+            },
+            (error) => console.log(error)
+          );
+        } else {
+          this.loadCartItems();
+        }
+      } else {
+        //loggin out
+        //- clean cartItems
+        //--even though we can add to cart non authorized
+        //--when we log out - cleaning it should be kinda security feature for user
+        this.cartItems.length = 0;
       }
     });
   }
@@ -85,11 +137,14 @@ export class DataSource {
       this.cartItems.push(cartItem);
 
       if (this.accountService.userValue) {
-
         cartItem.userId = this.accountService.userValue.id;
 
         this.http
-          .post<CartItem>(environment.apiUrl + '/api/cartitems', { ProductId: cartItem.product.id, UserId: cartItem.userId, Quantity: cartItem.quantity})
+          .post<CartItem>(environment.apiUrl + '/api/cartitems', {
+            ProductId: cartItem.product.id,
+            //UserId: cartItem.userId,
+            Quantity: cartItem.quantity,
+          })
           .subscribe(
             (data) => {
               cartItem.id = data.id;
