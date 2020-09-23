@@ -7,10 +7,22 @@
       *ngFor="let category of categories"
       (click)="setCategory(category.name)"
     >
-      <!-- <a routerLink="/detail/{{hero.id}}"> -->
       <span class="badge">{{ category.name }}</span>
       - {{ category.description }}
-      <!-- </a> -->
+      <div class="float-right">
+        <button
+          class="btn btn-outline-primary mr-2"
+          (click)="categoryEditClick(category.name)"
+        >
+          <i class="fa fa-edit fa-fw"></i>
+        </button>
+        <button
+          class="btn btn-outline-primary"
+          (click)="categoryDeleteClick(category.name)"
+        >
+          <i class="fa fa-times fa-fw"></i>
+        </button>
+      </div>
     </li>
   </ul>
 </div>

@@ -56,14 +56,8 @@ export class DataSource {
       if (data) {
         //loggin in
         //-if already has smth in the cart
-        //-- try to add all of this to server
-        //--- but be careful with correct ids(check implementation) - maybe add based on productId and not cartItemId
-        //---- actually webapi already uses productId
-        //--- smth already can be on server etc
-        //clean cart items
-        //--load from server
-
         if (this.cartItems.length > 0) {
+          //-- try to add all of this to server
           //Better to add all range at once (write appropriate methon in webapi)
           //- but we`ll add them separately to test forkJoin ... for learning experience
           let addRequests: Observable<CartItem>[] = [];
@@ -85,7 +79,7 @@ export class DataSource {
 
               //clear cartItems
               this.cartItems.length = 0;
-
+              //--load from server
               this.loadCartItems();
             },
             (error) => console.log(error)
@@ -268,8 +262,8 @@ export class DataSource {
     }
   }
 
-  public searchProducts(nameLike: string): Observable<Product[]> {
-    let take = 5;
+  public searchProducts(nameLike: string, take: number): Observable<Product[]> {
+    //let take = 5;
     if (nameLike) {
       return this.http.get<Product[]>(
         environment.apiUrl + `/api/products-like/${nameLike}/${take}`

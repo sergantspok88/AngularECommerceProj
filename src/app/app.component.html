@@ -19,6 +19,13 @@
       {{ accountService.userValue.username }}: role {{accountService.userValue.role}}
     </p>
     <button
+      *ngIf="accountService.userValue && accountService.userValue.role == 'Admin'"
+      class="btn btn-primary mr-1"
+      [routerLink]="['/admin']"
+    >
+      <i class="fa fa-user"></i> Admin
+    </button>
+    <button
       *ngIf="!accountService.userValue"
       class="btn btn-primary mr-1"
       [routerLink]="['/signin']"

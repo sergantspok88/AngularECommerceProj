@@ -1,0 +1,98 @@
+<div id="search-component" class="container">
+  <h4><label for="search-box">Product Search</label></h4>
+
+  <div class="input-group mb-3">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Type to search products"
+      #searchBox
+      [(ngModel)]="searchText"
+      (input)="search(searchBox.value)"
+    />
+    <div class="input-group-append">
+      <button
+        class="btn btn-outline-secondary"
+        type="button"
+        (click)="clearSearchField()"
+      >
+        X
+      </button>
+    </div>
+  </div>
+
+  <ul class="list-group">
+    <li
+      *ngFor="let product of searchProducts$ | async"
+      (click)="searchItemClicked(product.name)"
+      class="list-group-item list-group-item-action"
+    >
+      <!-- <a routerLink="/detail/{{hero.id}}"> -->
+      <b>{{ product.name }}:</b> {{ product.price }} USD
+      <!-- </a> -->
+      <div class="float-right">
+        <button
+          *ngIf="isAdmin()"
+          class="btn btn-outline-primary mr-2"
+          (click)="productEditClick(product.id)"
+        >
+          <i class="fa fa-edit fa-fw"></i>
+        </button>
+        <button
+          *ngIf="isAdmin()"
+          class="btn btn-outline-primary mr-2"
+          (click)="productDeleteClick(product.id)"
+        >
+          <i class="fa fa-times fa-fw"></i>
+        </button>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<div class="row">
+  <div *ngFor="let product of products; index as ind" class="col-12 mt-4">
+    <div class="card">
+      <div class="card-body">
+        <div class="container mt-2">
+          <div class="float-right">
+            <button
+              *ngIf="isAdmin()"
+              class="btn btn-outline-primary mr-2"
+              (click)="productEditClick(product.id)"
+            >
+              <i class="fa fa-edit fa-fw"></i>
+            </button>
+            <button
+              *ngIf="isAdmin()"
+              class="btn btn-outline-primary mr-2"
+              (click)="productDeleteClick(product.id)"
+            >
+              <i class="fa fa-times fa-fw"></i>
+            </button>
+          </div>
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p class="card-text">
+            - {{ product.description }} <br />
+            - {{ product.price }} USD <br />
+            - Category: {{ product.categoryName }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br />
+
+  <div class="container m-3">
+    <div class="col-md-12 text-center">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="loadMoreProducts()"
+      >
+        Load more products
+      </button>
+    </div>
+  </div>
+</div>
