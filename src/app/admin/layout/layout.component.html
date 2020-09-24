@@ -1,4 +1,12 @@
-<p>admin layout component:</p>
-<p>Some buttons here "Add Product", "Add Category"</p>
+<h1 class="text-center">Admin page</h1>
+
+<div class="text-center">
+  <button class="btn btn-primary mr-2" (click)="addProductClick()">
+    <i class="fa fa-plus fa-fw"></i> Add Product
+  </button>
+  <button class="btn btn-primary mr-2" (click)="addCategoryClick()">
+    <i class="fa fa-plus fa-fw"></i> Add Category
+  </button>
+</div>
 
 <router-outlet></router-outlet>

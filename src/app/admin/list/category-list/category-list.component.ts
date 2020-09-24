@@ -16,7 +16,8 @@ export class CategoryListComponent implements OnInit {
     return this.datasource.categories;
   }
 
-  setCategory(name: string) {
+  setCategory(name: string, event) {
+    if (event.target !== event.currentTarget) return;
     if (name == this.datasource.getChosenCategoryName()) {
       this.resetCategory();
     } else {

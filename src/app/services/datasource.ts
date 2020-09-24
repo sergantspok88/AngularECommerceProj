@@ -97,10 +97,6 @@ export class DataSource {
     });
   }
 
-  public loadCategories() {
-    this.getCategories().subscribe((data) => (this.categories = data));
-  }
-
   private loadCartItems() {
     if (this.accountService.userValue) {
       this.getCartItemsForUser(this.accountService.userValue.id).subscribe(
@@ -226,19 +222,6 @@ export class DataSource {
     }
   }
 
-  public getChosenCategoryName(): string {
-    return this.chosenCategoryName;
-  }
-
-  public setChosenCategory(categoryName: string) {
-    if (categoryName != this.chosenCategoryName) {
-      this.chosenCategoryName = categoryName;
-      //clear products
-      this.products.length = 0;
-      this.loadMoreProducts();
-    }
-  }
-
   public loadMoreProducts() {
     if (this.chosenCategoryName) {
       this.getProductsCategorySkipTake(
@@ -299,7 +282,6 @@ export class DataSource {
     }
   }
 
-  //These methods are only used internally
   private getProductsCategorySkipTake(
     categoryName: string,
     skip: number,
@@ -324,7 +306,25 @@ export class DataSource {
     //return this.http.get<Product[]>(this.baseUrl + 'api/products/20/10');
   }
 
+  //-------------Categories
+  public loadCategories() {
+    this.getCategories().subscribe((data) => (this.categories = data));
+  }
+
   private getCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(environment.apiUrl + '/api/categories');
+  }
+
+  public getChosenCategoryName(): string {
+    return this.chosenCategoryName;
+  }
+
+  public setChosenCategory(categoryName: string) {
+    if (categoryName != this.chosenCategoryName) {
+      this.chosenCategoryName = categoryName;
+      //clear products
+      this.products.length = 0;
+      this.loadMoreProducts();
+    }
   }
 }
