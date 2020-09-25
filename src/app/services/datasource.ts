@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { forkJoin, Observable, of, VirtualTimeScheduler } from 'rxjs';
+import {
+  BehaviorSubject,
+  forkJoin,
+  Observable,
+  of,
+  VirtualTimeScheduler,
+} from 'rxjs';
 import { Product } from '../model/product.model';
 import { Category } from '../model/category.model';
 import { environment } from 'src/environments/environment';
@@ -11,6 +17,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { AlertService } from './alert.service';
 import { JsonPipe } from '@angular/common';
 import { CartItem } from '../model/cart.model';
+import { env } from 'process';
 
 //const PROTOCOL = 'https';
 //const PORT = 5001;
@@ -27,11 +34,17 @@ export class DataSource {
   private chosenCategoryName: string = '';
   private takeNumber: number = 10;
 
+  //use this to subscribe for adding products event
+  public productAddSubject: BehaviorSubject<Product>;
+  public productIdEdit: number;
+
   constructor(
     private http: HttpClient,
     private accountService: AccountService,
     private alertService: AlertService
   ) {
+
+    this.productAddSubject = new BehaviorSubject<Product>(null);
     //this.baseUrl = `${PROTOCOL}://${location.hostname}:${PORT}/`;
 
     //console.log('products.length: ' + this.products.length);
@@ -211,6 +224,43 @@ export class DataSource {
           this.wishlists.push(data);
         });
     }
+  }
+
+  //Products--------------------------
+
+  public addProduct(product: Product) {
+    this.http
+      .post<Product>(environment.apiUrl + '/api/products', product)
+      .subscribe(
+        (data) => {
+          //this.products.push(data);
+          this.productAddSubject.next(data);
+          this.alertService.success(`Product ${data.name} successfully added`);
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
+  }
+
+  public editProduct(product: Product){
+    this.http
+      .put<Product>(environment.apiUrl + `/api/products/${product.id}`, product)
+      .subscribe(
+        (data) => {
+          //this.products.push(data);
+          //can affect already loaded products
+          let ind = this.products.findIndex((p) => p.id == product.id);
+          if(ind >= 0){
+            this.products[ind] = data;
+          }
+
+          this.alertService.success(`Product ${data.name} successfully edited`);
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
   }
 
   public setTakeNumber(take: number) {

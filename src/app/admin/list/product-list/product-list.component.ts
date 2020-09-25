@@ -5,6 +5,7 @@ import { DataSource } from 'src/app/services/datasource';
 
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { AccountService } from 'src/app/services/account.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'admin-product-list',
@@ -14,7 +15,9 @@ import { AccountService } from 'src/app/services/account.service';
 export class ProductListComponent implements OnInit {
   constructor(
     private datasource: DataSource,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   searchProducts$: Observable<Product[]>;
@@ -22,16 +25,16 @@ export class ProductListComponent implements OnInit {
   searchText: string = '';
 
   ngOnInit(): void {
-        this.searchProducts$ = this.searchTerms.pipe(
-          // wait XXXms after each keystroke before considering the term
-          debounceTime(300),
+    this.searchProducts$ = this.searchTerms.pipe(
+      // wait XXXms after each keystroke before considering the term
+      debounceTime(300),
 
-          // ignore new term if same as previous term
-          distinctUntilChanged(),
+      // ignore new term if same as previous term
+      distinctUntilChanged(),
 
-          // switch to new search observable each time the term changes
-          switchMap((term: string) => this.datasource.searchProducts(term, 10))
-        );
+      // switch to new search observable each time the term changes
+      switchMap((term: string) => this.datasource.searchProducts(term, 10))
+    );
   }
 
   search(term: string): void {
@@ -60,7 +63,9 @@ export class ProductListComponent implements OnInit {
   }
 
   productEditClick(productId) {
-    alert('Edit productId: ' + productId + ' - Not implemented');
+    //alert('Edit productId: ' + productId + ' - Not implemented');
+    this.datasource.productIdEdit = productId;
+    this.router.navigate(['edit-product'], { relativeTo: this.route });
   }
 
   get products(): Product[] {

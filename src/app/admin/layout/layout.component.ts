@@ -11,12 +11,4 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  addProductClick() {
-    //alert("Add Product - Not implemented");
-    this.router.navigate(['add-product'], { relativeTo: this.route });
-  }
-
-  addCategoryClick() {
-    alert('Add Category - Not implemented');
-  }
 }
