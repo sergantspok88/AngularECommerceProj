@@ -18,6 +18,7 @@ import { AlertService } from './alert.service';
 import { JsonPipe } from '@angular/common';
 import { CartItem } from '../model/cart.model';
 import { env } from 'process';
+import {apiroutes} from '../helpers/apiroutes';
 
 //const PROTOCOL = 'https';
 //const PORT = 5001;
@@ -77,7 +78,7 @@ export class DataSource {
           for (let cartItem of this.cartItems) {
             addRequests.push(
               this.http
-                .post<CartItem>(environment.apiUrl + `/api/cartitems`, {
+                .post<CartItem>(environment.apiUrl + apiroutes.addCartItem(), {
                   ProductId: cartItem.product.id,
                   //UserId: cartItem.userId,
                   Quantity: cartItem.quantity,
@@ -120,7 +121,7 @@ export class DataSource {
 
   private getCartItemsForUser(userId): Observable<CartItem[]> {
     return this.http.get<CartItem[]>(
-      environment.apiUrl + `/api/cartitems/user/${userId}`
+      environment.apiUrl + apiroutes.getCartItemsForUser(userId)
     );
   }
 
@@ -143,7 +144,7 @@ export class DataSource {
         cartItem.userId = this.accountService.userValue.id;
 
         this.http
-          .post<CartItem>(environment.apiUrl + '/api/cartitems', {
+          .post<CartItem>(environment.apiUrl + apiroutes.addCartItem(), {
             ProductId: cartItem.product.id,
             //UserId: cartItem.userId,
             Quantity: cartItem.quantity,
@@ -168,7 +169,7 @@ export class DataSource {
 
     if (this.accountService.userValue) {
       this.http
-        .delete(environment.apiUrl + `/api/cartitems/${cartItemId}`, {
+        .delete(environment.apiUrl + apiroutes.deleteCartItemById(cartItemId), {
           responseType: 'text',
         })
         .subscribe((data) => {
@@ -188,24 +189,28 @@ export class DataSource {
 
   private getWishlistsForUser(userId): Observable<Wishlist[]> {
     return this.http.get<Wishlist[]>(
-      environment.apiUrl + `/api/wishlistitems/user/${userId}`
+      environment.apiUrl + apiroutes.getWishlistItemsForUser(userId)
     );
   }
 
   public deleteWishlist(wishlistId) {
     if (this.accountService.userValue) {
       this.http
-        .delete(environment.apiUrl + `/api/wishlistitems/${wishlistId}`, {
+        .delete(environment.apiUrl + apiroutes.deleteWishlistItemById(wishlistId), {
           responseType: 'text',
         })
         .subscribe((data) => {
           //console.log(JSON.stringify(data));
+                this.wishlists.splice(
+                  this.wishlists.findIndex((w) => w.id == wishlistId),
+                  1
+                );
+        },
+        (error) => {
+          this.alertService.error(error);
         });
       //console.log('Delete wishlistItemId: ' + wishlistId);
-      this.wishlists.splice(
-        this.wishlists.findIndex((w) => w.id == wishlistId),
-        1
-      );
+
     }
   }
 
@@ -216,7 +221,7 @@ export class DataSource {
         (w) => w.product.id == productId
       );
       this.http
-        .post<Wishlist>(environment.apiUrl + `/api/wishlistitems`, {
+        .post<Wishlist>(environment.apiUrl + apiroutes.addWishlistItem(), {
           productId,
         })
         .subscribe((data) => {
@@ -230,7 +235,7 @@ export class DataSource {
 
   public addProduct(product: Product) {
     this.http
-      .post<Product>(environment.apiUrl + '/api/products', product)
+      .post<Product>(environment.apiUrl + apiroutes.addProduct(), product)
       .subscribe(
         (data) => {
           //this.products.push(data);
@@ -245,17 +250,19 @@ export class DataSource {
 
   public editProduct(product: Product){
     this.http
-      .put<Product>(environment.apiUrl + `/api/products/${product.id}`, product)
+      .put<Product>(environment.apiUrl + apiroutes.editProductById(product.id), product)
       .subscribe(
         (data) => {
           //this.products.push(data);
           //can affect already loaded products
           let ind = this.products.findIndex((p) => p.id == product.id);
-          if(ind >= 0){
-            this.products[ind] = data;
+          if (ind >= 0) {
+            this.products[ind] = product;
           }
 
-          this.alertService.success(`Product ${data.name} successfully edited`);
+          this.alertService.success(
+            `Product ${product.name} successfully edited`
+          );
         },
         (error) => {
           this.alertService.error(error);
@@ -299,7 +306,7 @@ export class DataSource {
     //let take = 5;
     if (nameLike) {
       return this.http.get<Product[]>(
-        environment.apiUrl + `/api/products-like/${nameLike}/${take}`
+        environment.apiUrl + apiroutes.getProductsNameLikeTake(nameLike, take)
       );
     } else {
       return of([]);
@@ -312,7 +319,7 @@ export class DataSource {
       this.accountService.userValue.role == 'Admin'
     ) {
       this.http
-        .delete(environment.apiUrl + `/api/products/${productId}`, {
+        .delete(environment.apiUrl + apiroutes.deleteProductById(productId), {
           responseType: 'json',
         })
         .subscribe(
@@ -338,7 +345,7 @@ export class DataSource {
     take: number
   ): Observable<Product[]> {
     return this.http.get<Product[]>(
-      environment.apiUrl + `/api/products/${categoryName}/${skip}/${take}`
+      environment.apiUrl + apiroutes.getProductsByCategoryNameSkipTake(categoryName, skip, take)
     );
   }
 
@@ -347,13 +354,12 @@ export class DataSource {
     take: number
   ): Observable<Product[]> {
     return this.http.get<Product[]>(
-      environment.apiUrl + `/api/products/${skip}/${take}`
+      environment.apiUrl + apiroutes.getProductsSkipTake(skip, take)
     );
   }
 
   private getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(environment.apiUrl + '/api/products');
-    //return this.http.get<Product[]>(this.baseUrl + 'api/products/20/10');
+    return this.http.get<Product[]>(environment.apiUrl + apiroutes.getProducts());
   }
 
   //-------------Categories
@@ -362,7 +368,7 @@ export class DataSource {
   }
 
   private getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(environment.apiUrl + '/api/categories');
+    return this.http.get<Category[]>(environment.apiUrl + apiroutes.getCategories());
   }
 
   public getChosenCategoryName(): string {

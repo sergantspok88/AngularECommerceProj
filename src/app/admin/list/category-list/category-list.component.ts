@@ -38,6 +38,6 @@ export class CategoryListComponent implements OnInit {
   }
 
   categoryEditClick(categoryName) {
-    alert('Delete category: ' + categoryName + ' - Not implemented');
+    alert('Edit category: ' + categoryName + ' - Not implemented');
   }
 }

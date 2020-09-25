@@ -50,49 +50,51 @@
   </ul>
 </div>
 
-<div class="row">
-  <div *ngFor="let product of products; index as ind" class="col-12 mt-4">
-    <div class="card">
-      <div class="card-body">
-        <div class="container mt-2">
-          <div class="float-right">
-            <button
-              *ngIf="isAdmin()"
-              class="btn btn-light mr-2"
-              (click)="productEditClick(product.id)"
-            >
-              <i class="fa fa-edit fa-fw"></i>
-            </button>
-            <button
-              *ngIf="isAdmin()"
-              class="btn btn-light mr-2"
-              (click)="productDeleteClick(product.id)"
-            >
-              <i class="fa fa-times fa-fw"></i>
-            </button>
+<div class="container">
+  <div class="row">
+    <div *ngFor="let product of products; index as ind" class="col-12 mt-4">
+      <div class="card">
+        <div class="card-body">
+          <div class="container mt-2">
+            <div class="float-right">
+              <button
+                *ngIf="isAdmin()"
+                class="btn btn-light mr-2"
+                (click)="productEditClick(product.id)"
+              >
+                <i class="fa fa-edit fa-fw"></i>
+              </button>
+              <button
+                *ngIf="isAdmin()"
+                class="btn btn-light mr-2"
+                (click)="productDeleteClick(product.id)"
+              >
+                <i class="fa fa-times fa-fw"></i>
+              </button>
+            </div>
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text">
+              - {{ product.description }} <br />
+              - {{ product.price }} USD <br />
+              - Category: {{ product.categoryName }}
+            </p>
           </div>
-          <h5 class="card-title">{{ product.name }}</h5>
-          <p class="card-text">
-            - {{ product.description }} <br />
-            - {{ product.price }} USD <br />
-            - Category: {{ product.categoryName }}
-          </p>
         </div>
       </div>
     </div>
-  </div>
 
-  <br />
+    <br />
 
-  <div class="container m-3">
-    <div class="col-md-12 text-center">
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="loadMoreProducts()"
-      >
-        Load more products
-      </button>
+    <div class="container m-3">
+      <div class="col-md-12 text-center">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="loadMoreProducts()"
+        >
+          Load more products
+        </button>
+      </div>
     </div>
   </div>
 </div>
