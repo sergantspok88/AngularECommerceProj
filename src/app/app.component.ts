@@ -1,4 +1,3 @@
-import { Route } from '@angular/compiler/src/core';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from './services/account.service';
@@ -25,11 +24,6 @@ export class AppComponent {
 
   cartButtonClicked() {
     this.router.navigate(['../cart'], { relativeTo: this.route });
-    // if(this.accountService.userValue){
-    //   alert("Cart not implemented");
-    // } else {
-    //   this.router.navigate(['../signin'], { relativeTo: this.route });
-    // }
   }
 
   wishlistButtonClicked() {

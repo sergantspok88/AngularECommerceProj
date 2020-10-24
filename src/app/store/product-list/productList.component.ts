@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Repository } from '../../services/repository';
 import { Product } from '../../model/product.model';
 import { DataSource } from 'src/app/services/datasource';
 import { Observable, Subject } from 'rxjs';
 
-import{ debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { AccountService } from 'src/app/services/account.service';
 
 @Component({
@@ -17,7 +16,6 @@ export class ProductList implements OnInit {
   searchText: string = '';
 
   constructor(
-    //private repository: Repository
     private datasource: DataSource,
     private accountService: AccountService
   ) {}
@@ -50,7 +48,7 @@ export class ProductList implements OnInit {
 
   ngOnInit() {
     this.searchProducts$ = this.searchTerms.pipe(
-      // wait 300ms after each keystroke before considering the term
+      // wait XXXms after each keystroke before considering the term
       debounceTime(700),
 
       // ignore new term if same as previous term
@@ -66,7 +64,6 @@ export class ProductList implements OnInit {
   }
 
   get products(): Product[] {
-    //return this.repository.getProducts();
     return this.datasource.products;
   }
 
@@ -75,7 +72,6 @@ export class ProductList implements OnInit {
   }
 
   wishlistClick(productId) {
-    //alert('Not implemented');
     if (this.datasource.wishlists.some((w) => w.product.id == productId)) {
       //delete wishlist
       let indexOfWishlist = this.datasource.wishlists.findIndex(
@@ -91,7 +87,6 @@ export class ProductList implements OnInit {
   }
 
   productDeleteClick(productId) {
-    //alert("Delete productId: " + productId + " not implemented");
     this.datasource.deleteProduct(productId);
   }
 
@@ -104,16 +99,11 @@ export class ProductList implements OnInit {
   }
 
   buyProductClick(productId) {
-    //alert('Not implemented');
     this.datasource.putProductInCart(productId);
   }
 
-  productCardClicked(productId, event){
+  productCardClicked(productId, event) {
     if (event.target !== event.currentTarget) return;
-    alert("Product id: " + productId + " - Product page not implemented");
+    alert('Product id: ' + productId + ' - Product page not implemented');
   }
-
-  // search(searchValue){
-  //   console.log("search called: " + searchValue);
-  // }
 }

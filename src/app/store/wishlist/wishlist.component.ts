@@ -13,14 +13,11 @@ export class WishlistComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  //!!!temp measure - actually need to load wishlist
-  //not all products
   get wishlists(): Wishlist[] {
     return this.datasource.wishlists;
   }
 
   deleteWishlist(wishlistId){
-    //alert(`Delete wishlistItemId ${wishlistId} - Not implemented`);
     this.datasource.deleteWishlist(wishlistId);
   }
 }

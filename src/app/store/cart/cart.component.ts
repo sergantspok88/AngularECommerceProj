@@ -12,14 +12,11 @@ export class CartComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  //!!!temp measure - actually need to load wishlist
-  //not all products
   get carts(): CartItem[] {
     return this.datasource.cartItems;
   }
 
   deleteCart(cartId) {
-    //alert(`Delete cartId ${cartId} - Not implemented`);
     this.datasource.deleteCartItem(cartId);
   }
 }

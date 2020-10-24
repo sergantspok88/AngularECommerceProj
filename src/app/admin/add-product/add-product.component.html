@@ -30,11 +30,12 @@
         [ngClass]="{ 'is-invalid': submitted && f.categoryName.errors }"
       >
         <option value="" selected disabled hidden>Choose category</option>
-        <option *ngFor="let category of this.datasource.categories" value="{{category.name}}">{{category.name}}</option>
-         <!-- [selected]="category.name == this.curProduct.categoryName" -->
-        <!-- <option>Cat1</option>
-        <option>Cat2</option>
-        <option>Cat3</option> -->
+        <option
+          *ngFor="let category of this.datasource.categories"
+          value="{{ category.name }}"
+        >
+          {{ category.name }}
+        </option>
       </select>
       <div *ngIf="submitted && f.categoryName.errors" class="invalid-feedback">
         <div *ngIf="f.categoryName.errors.required">Category is required</div>

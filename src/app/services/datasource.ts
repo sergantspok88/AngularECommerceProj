@@ -1,32 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {
-  BehaviorSubject,
-  forkJoin,
-  Observable,
-  of,
-  VirtualTimeScheduler,
-} from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable, of } from 'rxjs';
 import { Product } from '../model/product.model';
 import { Category } from '../model/category.model';
 import { environment } from 'src/environments/environment';
 import { Wishlist } from '../model/wishlist.model';
 import { AccountService } from './account.service';
-import { WishlistComponent } from '../store/wishlist/wishlist.component';
 import { catchError, map, tap } from 'rxjs/operators';
 import { AlertService } from './alert.service';
-import { JsonPipe } from '@angular/common';
 import { CartItem } from '../model/cart.model';
-import { env } from 'process';
-import {apiroutes} from '../helpers/apiroutes';
-
-//const PROTOCOL = 'https';
-//const PORT = 5001;
+import { apiroutes } from '../helpers/apiroutes';
 
 @Injectable()
 export class DataSource {
-  //baseUrl: string;
-
   public products: Product[] = [];
   public categories: Category[] = [];
   public wishlists: Wishlist[] = [];
@@ -44,18 +30,15 @@ export class DataSource {
     private accountService: AccountService,
     private alertService: AlertService
   ) {
-
     this.productAddSubject = new BehaviorSubject<Product>(null);
-    //this.baseUrl = `${PROTOCOL}://${location.hostname}:${PORT}/`;
 
-    //console.log('products.length: ' + this.products.length);
     this.loadMoreProducts();
     this.loadCategories();
     this.loadWishlists();
 
     this.loadCartItems();
 
-    //do smth with wishlists on user login/logout
+    //wishlists logic on user login/logout
     this.accountService.user.subscribe((data) => {
       if (data) {
         this.loadWishlists();
@@ -65,7 +48,7 @@ export class DataSource {
       }
     });
 
-    //do smth with cartItems on user login/logout
+    //cartItems logic on user login/logout
     this.accountService.user.subscribe((data) => {
       if (data) {
         //loggin in
@@ -80,17 +63,14 @@ export class DataSource {
               this.http
                 .post<CartItem>(environment.apiUrl + apiroutes.addCartItem(), {
                   ProductId: cartItem.product.id,
-                  //UserId: cartItem.userId,
                   Quantity: cartItem.quantity,
                 })
-                //.pipe(tap((res) => console.log(res)))
                 .pipe(catchError((error) => of(error)))
             );
           }
           forkJoin(addRequests).subscribe(
             (allResults) => {
               console.log(allResults);
-
               //clear cartItems
               this.cartItems.length = 0;
               //--load from server
@@ -196,21 +176,25 @@ export class DataSource {
   public deleteWishlist(wishlistId) {
     if (this.accountService.userValue) {
       this.http
-        .delete(environment.apiUrl + apiroutes.deleteWishlistItemById(wishlistId), {
-          responseType: 'text',
-        })
-        .subscribe((data) => {
-          //console.log(JSON.stringify(data));
-                this.wishlists.splice(
-                  this.wishlists.findIndex((w) => w.id == wishlistId),
-                  1
-                );
-        },
-        (error) => {
-          this.alertService.error(error);
-        });
+        .delete(
+          environment.apiUrl + apiroutes.deleteWishlistItemById(wishlistId),
+          {
+            responseType: 'text',
+          }
+        )
+        .subscribe(
+          (data) => {
+            //console.log(JSON.stringify(data));
+            this.wishlists.splice(
+              this.wishlists.findIndex((w) => w.id == wishlistId),
+              1
+            );
+          },
+          (error) => {
+            this.alertService.error(error);
+          }
+        );
       //console.log('Delete wishlistItemId: ' + wishlistId);
-
     }
   }
 
@@ -248,9 +232,12 @@ export class DataSource {
       );
   }
 
-  public editProduct(product: Product){
+  public editProduct(product: Product) {
     this.http
-      .put<Product>(environment.apiUrl + apiroutes.editProductById(product.id), product)
+      .put<Product>(
+        environment.apiUrl + apiroutes.editProductById(product.id),
+        product
+      )
       .subscribe(
         (data) => {
           //this.products.push(data);
@@ -345,7 +332,8 @@ export class DataSource {
     take: number
   ): Observable<Product[]> {
     return this.http.get<Product[]>(
-      environment.apiUrl + apiroutes.getProductsByCategoryNameSkipTake(categoryName, skip, take)
+      environment.apiUrl +
+        apiroutes.getProductsByCategoryNameSkipTake(categoryName, skip, take)
     );
   }
 
@@ -359,7 +347,9 @@ export class DataSource {
   }
 
   private getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(environment.apiUrl + apiroutes.getProducts());
+    return this.http.get<Product[]>(
+      environment.apiUrl + apiroutes.getProducts()
+    );
   }
 
   //-------------Categories
@@ -368,7 +358,9 @@ export class DataSource {
   }
 
   private getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(environment.apiUrl + apiroutes.getCategories());
+    return this.http.get<Category[]>(
+      environment.apiUrl + apiroutes.getCategories()
+    );
   }
 
   public getChosenCategoryName(): string {
