@@ -57,7 +57,7 @@ export class ProductList implements OnInit {
       distinctUntilChanged(),
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.datasource.searchProducts(term))
+      switchMap((term: string) => this.datasource.searchProducts(term, 5))
     );
   }
 

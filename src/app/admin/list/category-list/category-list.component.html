@@ -5,12 +5,24 @@
       class="list-group-item list-group-item-action"
       [class.active]="categoryActive(category.name)"
       *ngFor="let category of categories"
-      (click)="setCategory(category.name)"
+      (click)="setCategory(category.name, $event)"
     >
-      <!-- <a routerLink="/detail/{{hero.id}}"> -->
       <span class="badge">{{ category.name }}</span>
       - {{ category.description }}
-      <!-- </a> -->
+      <div class="float-right">
+        <button
+          class="btn btn-light mr-2"
+          (click)="categoryEditClick(category.name)"
+        >
+          <i class="fa fa-edit fa-fw"></i>
+        </button>
+        <button
+          class="btn btn-light"
+          (click)="categoryDeleteClick(category.name)"
+        >
+          <i class="fa fa-times fa-fw"></i>
+        </button>
+      </div>
     </li>
   </ul>
 </div>

@@ -2,6 +2,7 @@ import { Route } from '@angular/compiler/src/core';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from './services/account.service';
+import { DataSource } from './services/datasource';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +12,16 @@ import { AccountService } from './services/account.service';
 export class AppComponent {
   title = 'ecommangular';
 
-  constructor(public accountService: AccountService, private router: Router,
-    private route: ActivatedRoute) {}
+  constructor(
+    public accountService: AccountService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private datasource: DataSource
+  ) {}
+
+  cartItemsCount():number{
+    return this.datasource.cartItems.length;
+  }
 
   cartButtonClicked() {
     this.router.navigate(['../cart'], { relativeTo: this.route });

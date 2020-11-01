@@ -17,6 +17,7 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 import { WishlistComponent } from './store/wishlist/wishlist.component';
 import { CartComponent } from './store/cart/cart.component';
+import { RouterExtService } from './helpers/router.service';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { CartComponent } from './store/cart/cart.component';
   providers: [
     DataSource,
     Repository,
+    RouterExtService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],

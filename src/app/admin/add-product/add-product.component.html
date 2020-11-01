@@ -1,0 +1,84 @@
+<div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h2 class="text-center" *ngIf="isAddMode()">Create product</h2>
+    <h2 class="text-center" *ngIf="isEditMode()">Edit product</h2>
+
+    <div *ngIf="isEditMode()">
+      <label for="id">Id:</label>
+      <input type="text" class="form-control" value="1" disabled />
+    </div>
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Product name"
+        formControlName="name"
+        [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+      />
+      <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+        <div *ngIf="f.name.errors.required">Name is required</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="categoryName">Category:</label>
+      <select
+        class="form-control"
+        formControlName="categoryName"
+        [ngClass]="{ 'is-invalid': submitted && f.categoryName.errors }"
+      >
+        <option value="" selected disabled hidden>Choose category</option>
+        <option *ngFor="let category of this.datasource.categories" value="{{category.name}}">{{category.name}}</option>
+         <!-- [selected]="category.name == this.curProduct.categoryName" -->
+        <!-- <option>Cat1</option>
+        <option>Cat2</option>
+        <option>Cat3</option> -->
+      </select>
+      <div *ngIf="submitted && f.categoryName.errors" class="invalid-feedback">
+        <div *ngIf="f.categoryName.errors.required">Category is required</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <textarea
+        class="form-control"
+        formControlName="description"
+        rows="3"
+        placeholder="Product description"
+      >
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price:</label>
+      <input
+        type="number"
+        min="0"
+        class="form-control"
+        placeholder="Product price"
+        formControlName="price"
+        [ngClass]="{ 'is-invalid': submitted && f.price.errors }"
+      />
+      <div *ngIf="submitted && f.price.errors" class="invalid-feedback">
+        <div *ngIf="f.price.errors.required">Price is required</div>
+        <div *ngIf="f.price.errors.greaterThanValidator">
+          Price should be greater than 0
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button [disabled]="loading" class="btn btn-primary btn-block">
+        <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm mr-1"
+        ></span>
+        <span *ngIf="isAddMode()">Create product</span>
+        <span *ngIf="isEditMode()">Edit product</span>
+      </button>
+    </div>
+  </form>
+</div>
