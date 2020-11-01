@@ -1,4 +1,8 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AppComponent } from 'src/app/app.component';
+import { DataSource } from 'src/app/services/datasource';
 
 import { CategoryListComponent } from './category-list.component';
 
@@ -8,9 +12,13 @@ describe('CategoryListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CategoryListComponent ]
-    })
-    .compileComponents();
+      declarations: [CategoryListComponent],
+      providers: [DataSource],
+      imports: [
+        RouterTestingModule.withRoutes([{ path: '', component: AppComponent }]),
+        HttpClientTestingModule
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
