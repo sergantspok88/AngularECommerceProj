@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from '../app.component';
+import { User } from '../model/user';
 
 describe('AccountService', () => {
   let service: AccountService;
@@ -41,7 +42,7 @@ describe('AccountService', () => {
     httpTestingController.verify();
   });
 
-  it('test out login http call', () => {
+  it('test login http call', () => {
     service.login('login', 'pass').subscribe((data) => {
       //do nothing - just testing;
     });
@@ -53,6 +54,35 @@ describe('AccountService', () => {
     req.flush(dummyAnswer);
 
     expect(req.request.method).toBe('POST');
+  });
+
+  it('test register http call', () => {
+    const user: User = {
+      id: '1',
+      username: 'Username',
+      password: '',
+      firstname: '',
+      lastname: '',
+      role: 'User',
+      token: ''
+    };
+
+    let response = '';
+
+    service.register(user).subscribe((data) => {
+      //do nothing - just testing;
+      response = data.toString();
+    });
+
+    const req = httpTestingController.expectOne(
+      environment.apiUrl + '/api/users/register'
+    );
+    const dummyAnswer = 'ok response';
+    req.flush(dummyAnswer);
+
+    expect(req.request.method).toBe('POST');
+    expect(response).toBe(dummyAnswer);
+
   });
 
   it('should be created', () => {
