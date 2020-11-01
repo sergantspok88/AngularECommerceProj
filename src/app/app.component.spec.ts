@@ -1,11 +1,18 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed, async } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { AccountService } from './services/account.service';
+import { DataSource } from './services/datasource';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
+      declarations: [AppComponent],
+      providers: [DataSource, AccountService],
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule.withRoutes([{ path: '', component: AppComponent }]),
       ],
     }).compileComponents();
   }));
@@ -26,6 +33,8 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('ecommangular app is running!');
+    expect(compiled.querySelector('.navbar-brand').textContent).toContain(
+      'E-commerce'
+    );
   });
 });

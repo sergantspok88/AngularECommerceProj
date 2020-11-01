@@ -7,10 +7,8 @@
       *ngFor="let category of categories"
       (click)="setCategory(category.name)"
     >
-      <!-- <a routerLink="/detail/{{hero.id}}"> -->
       <span class="badge">{{ category.name }}</span>
       - {{ category.description }}
-      <!-- </a> -->
     </li>
   </ul>
 </div>

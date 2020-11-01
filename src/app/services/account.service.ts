@@ -6,33 +6,25 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from '../model/user';
 
-// const PROTOCOL = 'https';
-// const PORT = 5001;
-
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
   private userSubject: BehaviorSubject<User>;
   public user: Observable<User>;
-  //private baseUrl: string;
 
   constructor(private router: Router, private http: HttpClient) {
     this.userSubject = new BehaviorSubject<User>(
       JSON.parse(localStorage.getItem('user'))
     );
     this.user = this.userSubject.asObservable();
-    //environment.apiUrl = `${PROTOCOL}://${location.hostname}:${PORT}/`;
   }
 
   public get userValue(): User {
     return this.userSubject.value;
   }
 
-  //!!!
-  //public userName: string = 'Non authorized';
-
-  login(username, password) {
+  login(username, password): Observable<User> {
     return this.http
       .post<User>(environment.apiUrl + '/api/users/authenticate', {
         username,
@@ -45,21 +37,15 @@ export class AccountService {
           localStorage.setItem('user', JSON.stringify(user));
           this.userSubject.next(user);
 
-          //!!!!
-          //this.userName = user.username;
-
           return user;
         })
       );
   }
 
   logout() {
-    //console.log('logout');
     //remove user from local storage and set currentuser to null
     localStorage.removeItem('user');
     this.userSubject.next(null);
-    //!!!
-    //this.userName = 'Non authorized';
     //this.router.navigate(['/account/login']);
   }
 

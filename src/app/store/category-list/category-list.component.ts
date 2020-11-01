@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Repository } from 'src/app/services/repository';
 import { Category } from 'src/app/model/category.model';
 import { DataSource } from 'src/app/services/datasource';
 
@@ -9,26 +8,22 @@ import { DataSource } from 'src/app/services/datasource';
   styleUrls: ['./category-list.component.css'],
 })
 export class CategoryListComponent implements OnInit {
-  constructor(
-    //private repo: Repository
-    private datasource: DataSource
-  ) {}
+  constructor(private datasource: DataSource) {}
 
   ngOnInit(): void {}
 
   get categories(): Category[] {
-    //return this.repo.getCategories();
     return this.datasource.categories;
   }
-  setCategory(name: string){
+  setCategory(name: string) {
     this.datasource.setChosenCategory(name);
   }
 
   categoryActive(name: string): boolean {
-    return (name === this.datasource.getChosenCategoryName());
+    return name === this.datasource.getChosenCategoryName();
   }
 
-  resetCategory(){
-    this.datasource.setChosenCategory("");
+  resetCategory() {
+    this.datasource.setChosenCategory('');
   }
 }

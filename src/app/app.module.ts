@@ -1,9 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppComponent } from './app.component';
 import { DataSource } from './services/datasource';
-import { Repository } from './services/repository';
 import { ProductList } from './store/product-list/productList.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CategoryListComponent } from './store/category-list/category-list.component';
@@ -40,7 +38,6 @@ import { RouterExtService } from './helpers/router.service';
   ],
   providers: [
     DataSource,
-    Repository,
     RouterExtService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

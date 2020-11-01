@@ -1,14 +1,7 @@
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { RouterExtService } from 'src/app/helpers/router.service';
-import { Alert } from 'src/app/model/alert';
 import { Product } from 'src/app/model/product.model';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataSource } from 'src/app/services/datasource';
@@ -20,19 +13,17 @@ import { DataSource } from 'src/app/services/datasource';
 })
 export class AddProductComponent implements OnInit, AfterViewInit {
   private mode: string = 'add';
-  //private editProductId: number = -1;
 
   form: FormGroup;
   loading = false;
   submitted = false;
 
-  public curProduct:Product;
+  public curProduct: Product;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private routerExt: RouterExtService,
-    private cdr: ChangeDetectorRef,
     private alertService: AlertService,
     public datasource: DataSource
   ) {}
@@ -71,43 +62,41 @@ export class AddProductComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-        this.submitted = true;
+    this.submitted = true;
 
-        //reset alerts on submit
-        this.alertService.clear();
+    //reset alerts on submit
+    this.alertService.clear();
 
-        //stop here if from is invalid
-        if (this.form.invalid) {
-          return;
-        }
+    //stop here if from is invalid
+    if (this.form.invalid) {
+      return;
+    }
 
-        const product: Product = {
-          //need id for editing
-          id: this.datasource.productIdEdit,
-          name: this.f.name.value,
-          description: this.f.description.value,
-          price: this.f.price.value,
-          categoryName: this.f.categoryName.value,
-        };
+    const product: Product = {
+      //need id for editing
+      id: this.datasource.productIdEdit,
+      name: this.f.name.value,
+      description: this.f.description.value,
+      price: this.f.price.value,
+      categoryName: this.f.categoryName.value,
+    };
 
-        if(this.isAddMode()){
-          this.datasource.addProduct(product);
-        } else if(this.isEditMode()){
-          this.datasource.editProduct(product);
-        } else {
-          this.alertService.error('Wrong mode: ' + this.mode);
-        }
-
+    if (this.isAddMode()) {
+      this.datasource.addProduct(product);
+    } else if (this.isEditMode()) {
+      this.datasource.editProduct(product);
+    } else {
+      this.alertService.error('Wrong mode: ' + this.mode);
+    }
   }
 
   ngAfterViewInit() {
-    //let routeSplit = this.router.url.split('/');
-    //console.log('Route: ' + routeSplit[routeSplit.length - 1]);
     if (this.router.url.includes('add-product')) {
       this.mode = 'add';
     } else if (this.router.url.includes('edit-product')) {
       this.mode = 'edit';
       if (this.datasource.productIdEdit < 0) {
+        //not correct product id for editing - go somewhere back
         if (!this.routerExt.getPreviousUrl().includes('edit-product')) {
           //navigated here with routerLink
           this.router.navigateByUrl(this.routerExt.getPreviousUrl());
@@ -117,21 +106,26 @@ export class AddProductComponent implements OnInit, AfterViewInit {
         }
       } else {
         //set form values to chosen product
-        let ind = this.datasource.products.findIndex(p => p.id == this.datasource.productIdEdit);
-        if(ind >= 0){
+        let ind = this.datasource.products.findIndex(
+          (p) => p.id == this.datasource.productIdEdit
+        );
+        if (ind >= 0) {
           this.curProduct = this.datasource.products[ind];
           this.f.name.setValue(this.curProduct.name);
           this.f.description.setValue(this.curProduct.description);
           this.f.price.setValue(this.curProduct.price);
-          this.f.categoryName.setValue(this.curProduct.categoryName, {onlySelf: true});
+          this.f.categoryName.setValue(this.curProduct.categoryName, {
+            onlySelf: true,
+          });
         } else {
-          this.alertService.error('Can not find product with id: ' + this.datasource.productIdEdit);
+          this.alertService.error(
+            'Can not find product with id: ' + this.datasource.productIdEdit
+          );
         }
       }
     } else {
       this.mode = 'error';
     }
-    this.cdr.detectChanges();
   }
 
   isAddMode(): boolean {
