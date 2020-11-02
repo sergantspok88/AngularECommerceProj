@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { apiroutes } from '../helpers/apiroutes';
 import { User } from '../model/user';
 
 @Injectable({
@@ -26,7 +27,7 @@ export class AccountService {
 
   login(username, password): Observable<User> {
     return this.http
-      .post<User>(environment.apiUrl + '/api/users/authenticate', {
+      .post<User>(environment.apiUrl + apiroutes.authenticateUser(), {
         username,
         password,
       })
@@ -50,15 +51,15 @@ export class AccountService {
   }
 
   register(user: User) {
-    return this.http.post(environment.apiUrl + '/api/users/register', user);
+    return this.http.post(environment.apiUrl + apiroutes.registerUser(), user);
   }
 
   getAll(): Observable<User[]> {
-    return this.http.get<User[]>(environment.apiUrl + '/api/users');
+    return this.http.get<User[]>(environment.apiUrl + apiroutes.getUsers());
   }
 
   getById(id: string): Observable<User> {
-    return this.http.get<User>(environment.apiUrl + `/api/users/${id}`);
+    return this.http.get<User>(environment.apiUrl + apiroutes.getUserById(id));
   }
 
   //update

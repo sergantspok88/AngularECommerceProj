@@ -40,4 +40,13 @@ export class apiroutes {
 
   //Categories----------------
   static getCategories = () => `/api/categories/`;
+
+  //Users---------------------
+  static getUsers = () => `/api/users/`;
+
+  static getUserById = (id: string) => `/api/users/${id}`;
+
+  static registerUser = () => `/api/users/register/`;
+
+  static authenticateUser = () => `/api/users/authenticate/`;
 }
