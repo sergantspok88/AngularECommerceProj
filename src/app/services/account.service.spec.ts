@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from '../app.component';
 import { User } from '../model/user';
+import { apiroutes } from '../helpers/apiroutes';
 
 describe('AccountService', () => {
   let service: AccountService;
@@ -48,7 +49,7 @@ describe('AccountService', () => {
     });
 
     const req = httpTestingController.expectOne(
-      environment.apiUrl + '/api/users/authenticate'
+      environment.apiUrl + apiroutes.authenticateUser()
     );
     const dummyAnswer = 'dummy answer';
     req.flush(dummyAnswer);
@@ -75,7 +76,7 @@ describe('AccountService', () => {
     });
 
     const req = httpTestingController.expectOne(
-      environment.apiUrl + '/api/users/register'
+      environment.apiUrl + apiroutes.registerUser()
     );
     const dummyAnswer = 'ok response';
     req.flush(dummyAnswer);
